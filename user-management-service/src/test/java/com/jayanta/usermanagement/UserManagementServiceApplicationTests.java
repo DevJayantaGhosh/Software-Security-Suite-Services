@@ -1,4 +1,4 @@
-package com.jayanta.iitm.project.user_management_service;
+package com.jayanta.usermanagement;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

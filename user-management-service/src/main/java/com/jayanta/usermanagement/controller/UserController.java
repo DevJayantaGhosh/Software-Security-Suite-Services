@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
-@Tag(name = "User Management", description = "Admin CRUD + Authenticated Lists")
+@Tag(name = "User Management")
 @SecurityRequirement(name = "bearerAuth")
 @RequiredArgsConstructor
 public class UserController {

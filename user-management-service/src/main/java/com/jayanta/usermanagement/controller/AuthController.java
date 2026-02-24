@@ -20,7 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
-@Tag(name = "Authentication", description = "User registration, login, forgot password")
+@Tag(name = "Registration - Authentication & Authorization")
 @RequiredArgsConstructor
 @Slf4j
 public class AuthController {

@@ -1,0 +1,42 @@
+server:
+  port: 9090
+  error:
+    include-message: always
+    include-binding-errors: always
+
+spring:
+  application:
+    name: product-management-service
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/product_management_db
+      auto-index-creation: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  # Swagger OpenAPI
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html  #  SINGLE LINE ONLY
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+
+
+jwt:
+  # Note: SAME SECRET AS USER MANAGEMENT SERVICE (shared)
+  secret: yslxqwertgdfhysecretjwtk2a$10$92IXUNpkjO0rOQ5byMiYe4oKoEa3Ro9llC
+  expiration: 86400000
+
+app:
+  cors:
+    allowed-origins: http://localhost:5173  # React Vite dev server
+  frontend-url: http://localhost:5173
+
+logging:
+  level:
+    com.jayanta.projectmanagement: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.data.mongodb.core: DEBUG
+    org.springframework.web: DEBUG

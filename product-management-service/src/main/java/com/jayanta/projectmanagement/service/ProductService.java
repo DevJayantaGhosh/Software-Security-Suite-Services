@@ -5,10 +5,13 @@ import com.jayanta.projectmanagement.exception.ProductNotFoundException;
 import com.jayanta.projectmanagement.model.Product;
 import com.jayanta.projectmanagement.model.ProductStatus;
 import com.jayanta.projectmanagement.repository.ProductRepository;
+import com.mongodb.client.MongoCollection;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.Document;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import static com.mongodb.client.model.Filters.eq;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -21,22 +24,18 @@ import java.util.UUID;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final MongoTemplate mongoTemplate;
 
     // 1. CREATE - JWT authenticated user only
-    public Product createProduct(CreateProductDto dto, String createdBy) {
-        Product product = new Product();
+    public Product createProduct(Product product, String createdBy) {
         product.setId(UUID.randomUUID().toString());
-        product.setName(dto.getName());
-        product.setVersion(dto.getVersion());
-        product.setIsOpenSource(dto.isOpenSource());
-        if (dto.getDescription() != null) product.setDescription(dto.getDescription());
-        if (dto.getProductDirector() != null) product.setProductDirector(dto.getProductDirector());
-        if (dto.getSecurityHead() != null) product.setSecurityHead(dto.getSecurityHead());
-        product.setReleaseEngineers(dto.getReleaseEngineers() != null ? dto.getReleaseEngineers() : List.of());
-        product.setRepos(dto.getRepos() != null ? dto.getRepos() : List.of());
-        product.setDependencies(dto.getDependencies() != null ? dto.getDependencies() : List.of());
         product.setCreatedBy(createdBy);
+        product.setUpdatedBy(createdBy);
         product.setStatus(ProductStatus.Pending);
+
+        log.info("Creating product '{}' (v{}) by '{}'",
+                product.getName(), product.getVersion(), createdBy);
+
         return productRepository.save(product);
     }
 
@@ -71,31 +70,58 @@ public class ProductService {
                 .orElseThrow(() -> new ProductNotFoundException("Product not found: " + id));
     }
 
-    // 4. GET ALL (Lightweight)
-    public PaginationResponse<ProductListDto> getAllProductsPaginated(int page, int size) {
-        var pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        var pageResult = productRepository.findAllProjection(pageable);
+    // 4. FULL Product pagination (NEWEST FIRST)
+    public PaginationResponse<Product> getAllProductsPaginated(int page, int size) {
+        var pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        var pageResult = productRepository.findAllByOrderByCreatedAtDesc(pageable);
 
-        return PaginationResponse.<ProductListDto>builder()
+        return PaginationResponse.<Product>builder()
                 .currentPage(pageResult.getNumber())
                 .totalPages(pageResult.getTotalPages())
                 .totalItems(pageResult.getTotalElements())
                 .pageSize(pageResult.getSize())
-                .items(pageResult.getContent())
+                .items(pageResult.getContent())  //  FULL Product + NEWEST FIRST
                 .hasNext(pageResult.hasNext())
                 .hasPrevious(pageResult.hasPrevious())
                 .build();
     }
 
-    // 5. GET OPEN SOURCE (Lightweight)
-    public List<ProductListDto> getOpenSourceProducts() {
-        return productRepository.findOpenSourceProjection();
-    }
+    // 5. FULL Product open source pagination (NEWEST FIRST)
+    public PaginationResponse<Product> getOpenSourceProductsPaginated(int page, int size) {
+        var pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        var pageResult = productRepository.findByIsOpenSourceTrueOrderByCreatedAtDesc(pageable);
 
+        return PaginationResponse.<Product>builder()
+                .currentPage(pageResult.getNumber())
+                .totalPages(pageResult.getTotalPages())
+                .totalItems(pageResult.getTotalElements())
+                .pageSize(pageResult.getSize())
+                .items(pageResult.getContent())  //  FULL Product + NEWEST FIRST
+                .hasNext(pageResult.hasNext())
+                .hasPrevious(pageResult.hasPrevious())
+                .build();
+    }
     // 6. DELETE - INLINE validation
     public void deleteProduct(String id, String deletedBy) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found: " + id));
         productRepository.delete(product);
+    }
+
+    // 7. Get Product Statistics
+    public ProductStatsResponse getProductStatistics() {
+        MongoCollection<Document> collection = mongoTemplate.getCollection("products");
+
+        long total = collection.countDocuments();
+        long pending = collection.countDocuments(eq("status", "Pending"));
+        long approved = collection.countDocuments(eq("status", "Approved"));
+        long rejected = collection.countDocuments(eq("status", "Rejected"));
+        long released = collection.countDocuments(eq("status", "Released"));
+        long openSource = collection.countDocuments(eq("isOpenSource", true));
+
+        log.info("Product Stats: total={}, pending={}, approved={}, rejected={}, released={}, openSource={}",
+                total, pending, approved, rejected, released, openSource);
+
+        return new ProductStatsResponse(total, pending, approved, rejected, released, openSource);
     }
 }

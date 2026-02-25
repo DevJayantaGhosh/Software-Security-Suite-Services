@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
-    // 🔥 WRONG PASSWORD - 401
+    //  WRONG PASSWORD - 401
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ApiError> handleBadCredentials(BadCredentialsException ex) {
         log.warn("Login failed - Bad credentials");
@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
-    // 🔥 USER NOT FOUND - 401
+    //  USER NOT FOUND - 401
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ApiError> handleUserNotFound(UsernameNotFoundException ex) {
         log.warn("Login failed - User not found: {}", ex.getMessage());
@@ -75,7 +75,7 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
-    // 🔥 FINAL CATCH-ALL with full logging
+    //  FINAL CATCH-ALL with full logging
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleGeneric(Exception ex) {
         log.error("Unhandled exception occurred", ex);

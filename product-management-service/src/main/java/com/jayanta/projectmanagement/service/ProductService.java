@@ -57,6 +57,7 @@ public class ProductService {
         if (updateData.getDependencies() != null) existing.setDependencies(updateData.getDependencies());
         if (updateData.getStatus() != null) existing.setStatus(updateData.getStatus());
         if (updateData.getRemark() != null) existing.setRemark(updateData.getRemark());
+        if (updateData.getSecurityScanReportPath() != null) existing.setSecurityScanReportPath(updateData.getSecurityScanReportPath());
         if (updateData.getSignatureFilePath() != null) existing.setSignatureFilePath(updateData.getSignatureFilePath());
         if (updateData.getPublicKeyFilePath() != null) existing.setPublicKeyFilePath(updateData.getPublicKeyFilePath());
         existing.setUpdatedBy(updatedBy);

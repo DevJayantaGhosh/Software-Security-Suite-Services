@@ -29,8 +29,8 @@ spring:
 
 jwt:
   # Note: SAME SECRET AS USER MANAGEMENT SERVICE (shared)
-  secret: yslxqwertgdfhysecretjwtk2a$10$92IXUNpkjO0rOQ5byMiYe4oKoEa3Ro9llC
-  expiration: 86400000
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}
 
 app:
   cors:

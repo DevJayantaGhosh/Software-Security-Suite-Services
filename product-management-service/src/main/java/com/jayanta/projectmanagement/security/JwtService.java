@@ -3,35 +3,70 @@ package com.jayanta.projectmanagement.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class JwtService {
 
     @Value("${jwt.secret}")
     private String secretKey;
 
     @Value("${jwt.expiration}")
-    private int jwtExpirationInMs;
+    private long jwtExpiration;
 
-    public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+    /**
+     *  EXACT SAME as User Service - UTF-8 encoding (RECOMMENDED)
+     */
+    private SecretKey getSigningKey() {
+        return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String extractUserId(String token) {
-        return extractClaim(token, claims -> claims.get("userId", String.class));
+    public String extractUsername(String token) {
+        log.debug(" Extracting username from JWT");
+        try {
+            String username = extractClaim(token, Claims::getSubject);
+            log.debug("✅ Username extracted: {}", username);
+            return username;
+        } catch (Exception e) {
+            log.error("❌ JWT Parse FAILED: {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    public List<SimpleGrantedAuthority> extractAuthorities(String token) {
+        log.debug(" Extracting authorities from JWT");
+        Claims claims = extractAllClaims(token);
+        @SuppressWarnings("unchecked")
+        List<String> roles = claims.get("roles", List.class);
+        log.debug("✅ Roles found: {}", roles);
+
+        List<SimpleGrantedAuthority> authorities = roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+        log.debug("✅ Authorities created: {}", authorities);
+        return authorities;
     }
 
     public boolean isTokenValid(String token) {
+        log.debug(" Validating JWT token");
         try {
             Claims claims = extractAllClaims(token);
-            return !isTokenExpired(claims);
+            boolean notExpired = !claims.getExpiration().before(new Date());
+            log.debug("✅ Token valid: {} (expires: {})", notExpired, claims.getExpiration());
+            return notExpired;
         } catch (Exception e) {
+            log.error("❌ Token validation FAILED: {}", e.getMessage());
             return false;
         }
     }
@@ -42,16 +77,11 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        // 🔥 CORRECT MODERN JJWT 0.12.x SYNTAX
-        SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes());
+        log.debug(" Parsing JWT claims");
         return Jwts.parser()
-                .verifyWith(key)
+                .verifyWith(getSigningKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-    }
-
-    private boolean isTokenExpired(Claims claims) {
-        return claims.getExpiration().before(new Date());
     }
 }

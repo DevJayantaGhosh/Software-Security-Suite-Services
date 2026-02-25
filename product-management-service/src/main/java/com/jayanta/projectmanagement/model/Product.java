@@ -68,6 +68,9 @@ public class Product {
     @Field("remark")
     private String remark;
 
+    @Field("securityScanReportPath")
+    private String securityScanReportPath;
+
     @Field("signatureFilePath")
     private String signatureFilePath;
 

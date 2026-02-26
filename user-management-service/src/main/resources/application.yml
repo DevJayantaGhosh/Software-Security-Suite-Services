@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8080  # ✅ YOUR USER SERVICE PORT
   error:
     include-message: always
     include-binding-errors: always
@@ -16,29 +16,27 @@ spring:
       maximum-pool-size: 20
       minimum-idle: 5
       idle-timeout: 300000
-    #  Runs data.sql on every restart (idempotent)
     initialization-mode: always
 
   jpa:
     hibernate:
-      ddl-auto: update                    # Updates schema only
+      ddl-auto: update
     show-sql: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
 
-  # Executes data.sql after JPA tables are ready
   sql:
     init:
       mode: always
-      continue-on-error: true             # Ignores errors if tables don't exist yet
+      continue-on-error: true
 
   mail:
     host: smtp.gmail.com
     port: 587
-    username: your-gmail@gmail.com          # ? UPDATE THIS
-    password: your-16-char-app-password     # ? UPDATE THIS
+    username: ${MAIL_USERNAME}        # ✅ Use env var
+    password: ${MAIL_PASSWORD}        # ✅ Use env var
     properties:
       mail:
         smtp:
@@ -49,13 +47,33 @@ spring:
         mime:
           encoding: UTF-8
 
+  # 🔥 GLOBAL CORS - ALL CLIENTS + DESKTOP APPS + UNKNOWN PORTS
+  cors:
+    allowed-origin-patterns:
+      - "http://localhost:*"
+      - "http://127.0.0.1:*"
+      - "http://192.168.*:*"
+      - "capacitor://localhost"
+      - "capacitor://*"
+      - "file://*"           # Electron Desktop Apps
+    allowed-methods: GET,POST,PUT,DELETE,PATCH,OPTIONS
+    allowed-headers: "*"
+    allow-credentials: true
+    max-age: 3600
+
 jwt:
   secret: ${JWT_SECRET}
   expiration: ${JWT_EXPIRATION}
 
 app:
   cors:
-    allowed-origins: http://localhost:5173
+    allowed-origins:
+      - "http://localhost:*"
+      - "http://127.0.0.1:*"
+      - "http://192.168.*:*"
+      - "capacitor://localhost"
+      - "capacitor://*"
+      - "file://*"           # ✅ Desktop Electron support
   otp:
     length: 6
     expiry-minutes: 10
@@ -66,3 +84,4 @@ logging:
     com.jayanta.usermanagement: DEBUG
     org.springframework.security: DEBUG
     org.hibernate.SQL: DEBUG
+    org.springframework.web.cors: DEBUG    # ✅ CORS Debug logs

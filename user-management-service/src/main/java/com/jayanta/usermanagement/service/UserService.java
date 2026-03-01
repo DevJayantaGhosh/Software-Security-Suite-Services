@@ -15,7 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
@@ -71,7 +73,7 @@ public class UserService {
             user.setRole(userRole);
 
             String securityContextUser = SecurityContextHolder.getContext().getAuthentication().getName();
-            user.setModifiedBy(request.getModifiedBy() != null ? request.getModifiedBy() :securityContextUser);
+            user.setModifiedBy(request.getModifiedBy() != null ? request.getModifiedBy() : securityContextUser);
             user.setLastModifiedAt(LocalDateTime.now());
 
             if (request.getName() != null && !request.getName().trim().isEmpty()) {
@@ -87,11 +89,24 @@ public class UserService {
                 if (request.getLicenseActivatedBy() != null && !request.getLicenseActivatedBy().trim().isEmpty()) {
                     user.setLicenseActivatedBy(request.getLicenseActivatedBy().trim());
                 }
+
+
                 if (request.getLicenseActivatedOn() != null && !request.getLicenseActivatedOn().trim().isEmpty()) {
-                    user.setLicenseActivatedOn(LocalDateTime.parse(request.getLicenseActivatedOn()));
+                    LocalDate date = LocalDate.parse(request.getLicenseActivatedOn(),
+                            DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    user.setLicenseActivatedOn(date.atStartOfDay());
                 }
                 if (request.getLicenseExpiredOn() != null && !request.getLicenseExpiredOn().trim().isEmpty()) {
-                    user.setLicenseExpiredOn(LocalDateTime.parse(request.getLicenseExpiredOn()));
+                    LocalDate date = LocalDate.parse(request.getLicenseExpiredOn(),
+                            DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    user.setLicenseExpiredOn(date.atStartOfDay());
+                }
+
+                // Date validation
+                if (user.getLicenseActivatedOn() != null && user.getLicenseExpiredOn() != null) {
+                    if (user.getLicenseExpiredOn().isBefore(user.getLicenseActivatedOn())) {
+                        throw new UserException("License expiry date cannot be before activation date", "INVALID_LICENSE_DATES");
+                    }
                 }
             }
 
@@ -107,8 +122,6 @@ public class UserService {
             throw new UserException("Failed to update user: " + e.getMessage(), "UPDATE_FAILED");
         }
     }
-
-
 
     public void deleteUser(String userId) {
         AppUser user = userRepository.findById(userId)

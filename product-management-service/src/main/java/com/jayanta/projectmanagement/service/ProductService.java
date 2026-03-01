@@ -116,12 +116,13 @@ public class ProductService {
         long pending = collection.countDocuments(eq("status", "Pending"));
         long approved = collection.countDocuments(eq("status", "Approved"));
         long rejected = collection.countDocuments(eq("status", "Rejected"));
+        long signed = collection.countDocuments(eq("status", "Signed"));
         long released = collection.countDocuments(eq("status", "Released"));
         long openSource = collection.countDocuments(eq("isOpenSource", true));
 
-        log.info("Product Stats: total={}, pending={}, approved={}, rejected={}, released={}, openSource={}",
-                total, pending, approved, rejected, released, openSource);
+        log.info("Product Stats: total={}, pending={}, approved={}, rejected={}, signed = {}, released={}, openSource={}",
+                total, pending, approved, rejected, signed, released, openSource);
 
-        return new ProductStatsResponse(total, pending, approved, rejected, released, openSource);
+        return new ProductStatsResponse(total, pending, approved, rejected, signed, released, openSource);
     }
 }

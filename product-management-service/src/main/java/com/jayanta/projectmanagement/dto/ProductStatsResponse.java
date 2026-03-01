@@ -12,6 +12,7 @@ public class ProductStatsResponse {
     private long pending;
     private long approved;
     private long rejected;
+    private long signed;
     private long released;
     private long openSource;
 }

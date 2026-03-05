@@ -26,6 +26,29 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
+    // Repo Exceptions
+    @ExceptionHandler(RepoNotFoundException.class)
+    public ResponseEntity<ApiError> handleRepoNotFound(RepoNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ApiError.builder()
+                        .status(HttpStatus.NOT_FOUND)
+                        .message(ex.getMessage())
+                        .code("REPO_NOT_FOUND")
+                        .field("id")
+                        .build());
+    }
+
+    @ExceptionHandler(DuplicateRepoException.class)
+    public ResponseEntity<ApiError> handleDuplicateRepo(DuplicateRepoException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(ApiError.builder()
+                        .status(HttpStatus.CONFLICT)
+                        .message(ex.getMessage())
+                        .code("REPO_URL_EXISTS")
+                        .field("repoUrl")
+                        .build());
+    }
+
     @ExceptionHandler(org.springframework.data.mongodb.UncategorizedMongoDbException.class)
     public ResponseEntity<ApiError> handleMongoException(org.springframework.data.mongodb.UncategorizedMongoDbException ex) {
         log.error("MongoDB error: {}", ex.getMessage());
@@ -70,7 +93,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleGeneric(Exception ex) {
-        log.error("Unhandled exception: ", ex);  //  FULL STACKTRACE
+        log.error("Unhandled exception: ", ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiError.builder()
                         .status(HttpStatus.INTERNAL_SERVER_ERROR)

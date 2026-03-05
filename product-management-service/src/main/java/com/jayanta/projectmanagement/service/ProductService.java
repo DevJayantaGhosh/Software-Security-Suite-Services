@@ -15,6 +15,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,7 +30,9 @@ public class ProductService {
     // 1. CREATE - JWT authenticated user only
     public Product createProduct(Product product, String createdBy) {
         product.setId(UUID.randomUUID().toString());
+        product.setCreatedAt(LocalDateTime.now());
         product.setCreatedBy(createdBy);
+        product.setUpdatedAt(LocalDateTime.now());
         product.setUpdatedBy(createdBy);
         product.setStatus(ProductStatus.Pending);
 
@@ -57,9 +60,12 @@ public class ProductService {
         if (updateData.getStatus() != null) existing.setStatus(updateData.getStatus());
         if (updateData.getRemark() != null) existing.setRemark(updateData.getRemark());
         if (updateData.getSecurityScanReportPath() != null) existing.setSecurityScanReportPath(updateData.getSecurityScanReportPath());
+        if (updateData.getSigningReportPath() != null) existing.setSigningReportPath(updateData.getSigningReportPath());
+        if (updateData.getReleaseReportPath() != null) existing.setReleaseReportPath(updateData.getReleaseReportPath());
         if (updateData.getSignatureFilePath() != null) existing.setSignatureFilePath(updateData.getSignatureFilePath());
         if (updateData.getPublicKeyFilePath() != null) existing.setPublicKeyFilePath(updateData.getPublicKeyFilePath());
         existing.setUpdatedBy(updatedBy);
+        existing.setUpdatedAt(LocalDateTime.now());
 
         return productRepository.save(existing);
     }

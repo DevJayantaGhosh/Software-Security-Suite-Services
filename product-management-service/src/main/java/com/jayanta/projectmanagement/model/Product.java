@@ -46,20 +46,19 @@ public class Product {
     @Field("dependencies")
     private List<String> dependencies;
 
-    // 🔥 AUTO-MANAGED AUDIT FIELDS - FIXED!
     @Field("createdBy")
     private String createdBy;
 
     @CreatedDate
     @Field("createdAt")
-    private LocalDateTime createdAt;  // Auto-set ONCE on CREATE
+    private LocalDateTime createdAt;  
 
     @Field("updatedBy")
     private String updatedBy;
 
     @LastModifiedDate
     @Field("updatedAt")
-    private LocalDateTime updatedAt;  //  Auto-updated EVERY SAVE
+    private LocalDateTime updatedAt;  
 
     // Approval Workflow
     @Field("status")
@@ -70,6 +69,12 @@ public class Product {
 
     @Field("securityScanReportPath")
     private String securityScanReportPath;
+
+    @Field("signingReportPath")
+    private String signingReportPath;
+
+    @Field("releaseReportPath")
+    private String releaseReportPath;
 
     @Field("signatureFilePath")
     private String signatureFilePath;

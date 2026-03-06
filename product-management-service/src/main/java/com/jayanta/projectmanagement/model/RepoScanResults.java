@@ -7,5 +7,4 @@ public class RepoScanResults {
     private SignatureVerificationResult signatureVerification;
     private SecretLeakDetectionResult secretLeakDetection;
     private VulnerabilityScanResult vulnerabilityScan;
-    private StaticAnalysisResult staticAnalysis;
 }

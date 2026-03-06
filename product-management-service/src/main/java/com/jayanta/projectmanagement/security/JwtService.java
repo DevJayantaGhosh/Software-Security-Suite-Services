@@ -35,9 +35,8 @@ public class JwtService {
     public String extractUsername(String token) {
         log.debug(" Extracting username from JWT");
         try {
-            String username = extractClaim(token, Claims::getSubject);
-            log.debug("✅ Username extracted: {}", username);
-            return username;
+            return extractClaim(token, Claims::getSubject);
+
         } catch (Exception e) {
             log.error("❌ JWT Parse FAILED: {}", e.getMessage());
             throw e;
@@ -49,12 +48,11 @@ public class JwtService {
         Claims claims = extractAllClaims(token);
         @SuppressWarnings("unchecked")
         List<String> roles = claims.get("roles", List.class);
-        log.debug("✅ Roles found: {}", roles);
 
         List<SimpleGrantedAuthority> authorities = roles.stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
-        log.debug("✅ Authorities created: {}", authorities);
+
         return authorities;
     }
 

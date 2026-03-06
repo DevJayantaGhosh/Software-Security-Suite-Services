@@ -52,7 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
 
-                log.info("✅ Authentication SET: {} | Roles: {}", username, authorities);
+
             } else {
                 log.warn("❌ Authentication FAILED for username: {}", username);
             }

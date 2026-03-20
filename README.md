@@ -12,9 +12,9 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                        SHERLOCK SECURITY SUITE                           │
-│                 (Electron Desktop App  &  Web Portal)                    │
-│                          Frontend — Port 5173                            │
+│                        SHERLOCK SECURITY SUITE                          │
+│                 (Electron Desktop App  &  Web Portal)                   │
+│                          Frontend — Port 5173                           │
 └───────────┬─────────────────────────────────────────────┬───────────────┘
             │                                             │
             │  User Authentication                        │  Product, Repo &
@@ -120,3 +120,8 @@ cd product-management-service
 # Swagger UI:
 #   User Service:    http://localhost:8080/swagger-ui/index.html
 #   Product Service: http://localhost:9090/swagger-ui/index.html
+
+
+
+
+

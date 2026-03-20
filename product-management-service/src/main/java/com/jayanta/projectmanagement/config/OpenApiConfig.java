@@ -16,7 +16,7 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("📦 Product Management Service")
+                        .title("📦 Product Management Service 📦")
                         .description("""
 
     ## 🔐 JWT Authentication (User Management Service)
@@ -31,10 +31,10 @@ public class OpenApiConfig {
     ```
     1. Login → User Management → Copy JWT token
     2. [Authorize] → Bearer {your-jwt-token}
-    3. Test all 6 endpoints! ✅
+    3. Execute REST endpoints! 
     ```
     
-    **Built By Jayanta Ghosh - cs23m513@smail.iitm.ac.in**
+    **Jayanta Ghosh - cs23m513@smail.iitm.ac.in**
     """)
                         .version("v1.0.0")
                         .contact(new Contact()

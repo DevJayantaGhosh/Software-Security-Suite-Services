@@ -16,30 +16,15 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("👤 User Management Service")
+                        .title("👤 User Management Service 👤")
                         .description("""
 
-    ## 🔐 Registration & Login
-    • **📝 Self-Service Registration** - `POST /api/auth/register`
-    • **🔑 Secure JWT Login** - `POST /api/auth/login` 
-    • **📧 Email OTP Reset** - `POST /api/auth/forgot-password`
+    ## 🔐 User Management With Self-Service Registration & Login
+
     
     
-    ## 🛡️ User Management (Admin JWT Required)
-    • **👥 List All Users** - `GET /api/users`
-    • **🏢 Internal Users** - `GET /api/users/internal`
-    • **🎭 Role Updates** - `PUT /api/users/{id}/role`
-    • **📅 License Control** - License activation & expiry
-    
-    
-    ## 🎯 Get Started
-    ```
-    Test Admin Access - admin@gmail.com / Admin123
-    1. POST /api/auth/login → Copy JWT
-    2. [Authorize] → Bearer {token}
-    3. Admin endpoints unlocked! 
-    ```
-     **Built By Jayanta Ghosh - cs23m513@smail.iitm.ac.in**
+
+     **Jayanta Ghosh - cs23m513@smail.iitm.ac.in**
     """)
 
                         .version("v1.0.0")

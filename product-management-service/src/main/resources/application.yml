@@ -9,8 +9,6 @@ spring:
     name: product-management-service
   data:
     mongodb:
-      # MongoDB ATLAS
-      uri: ${MONGODB_URI}
       auto-index-creation: true
   mvc:
     pathmatch:
@@ -28,15 +26,29 @@ spring:
     allow-credentials: true
     max-age: 36000
 
-  springdoc:
-    swagger-ui:
-      path: /swagger-ui.html
-      operations-sorter: alpha
-    api-docs:
-      path: /v3/api-docs
-    default-consumes-media-type: application/json
-    default-produces-media-type: application/json
-    remove-broken-reference-definitions: true
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  remove-broken-reference-definitions: true
+
+# MongoDB Connection Configuration
+# Set is-cloud-db=true to use URI style, false to use host/port/credentials style
+mongodb:
+  is-cloud-db: ${IS_CLOUD_DB:false}
+  # Cloud (URI-based) — used when is-cloud-db=true
+  uri: ${MONGODB_URI:}
+  # Standalone (host/port/credentials) — used when is-cloud-db=false
+  host: ${MONGODB_HOST:localhost}
+  port: ${MONGODB_PORT:27017}
+  database: ${MONGODB_DATABASE:product_management_db}
+  username: ${MONGODB_USERNAME:}
+  password: ${MONGODB_PASSWORD:}
+  authentication-database: ${MONGODB_AUTH_DB:admin}
 
 jwt:
   # Note: SAME SECRET AS USER MANAGEMENT SERVICE (shared)

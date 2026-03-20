@@ -1,5 +1,5 @@
 server:
-  port: 8080  # ✅ YOUR USER SERVICE PORT
+  port: 8080  #  USER SERVICE PORT
   error:
     include-message: always
     include-binding-errors: always
@@ -35,8 +35,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${MAIL_USERNAME}        # ✅ Use env var
-    password: ${MAIL_PASSWORD}        # ✅ Use env var
+    username: ${MAIL_USERNAME}        # Use env var
+    password: ${MAIL_PASSWORD}        # Use env var
     properties:
       mail:
         smtp:
@@ -73,7 +73,7 @@ app:
       - "http://192.168.*:*"
       - "capacitor://localhost"
       - "capacitor://*"
-      - "file://*"           # ✅ Desktop Electron support
+      - "file://*"           # Desktop Electron support
   otp:
     length: 6
     expiry-minutes: 10
@@ -84,4 +84,4 @@ logging:
     com.jayanta.usermanagement: DEBUG
     org.springframework.security: DEBUG
     org.hibernate.SQL: DEBUG
-    org.springframework.web.cors: DEBUG    # ✅ CORS Debug logs
+    org.springframework.web.cors: DEBUG    #  CORS Debug logs

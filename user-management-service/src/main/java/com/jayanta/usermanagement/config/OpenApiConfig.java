@@ -37,7 +37,7 @@ public class OpenApiConfig {
     Test Admin Access - admin@gmail.com / Admin123
     1. POST /api/auth/login → Copy JWT
     2. [Authorize] → Bearer {token}
-    3. Admin endpoints unlocked! ✅
+    3. Admin endpoints unlocked! 
     ```
      **Built By Jayanta Ghosh - cs23m513@smail.iitm.ac.in**
     """)
@@ -47,10 +47,10 @@ public class OpenApiConfig {
                                 .name("Jayanta Ghosh")
                                 .email("cs23m513@smail.iitm.ac.in")))
 
-                // ✅ JWT AUTH FOR ALL PROTECTED ENDPOINTS
+                // JWT AUTH FOR ALL PROTECTED ENDPOINTS
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
 
-                // ✅ SECURITY SCHEME DEFINITION
+                //  SECURITY SCHEME DEFINITION
                 .components(new Components()
                         .addSecuritySchemes("bearerAuth", new SecurityScheme()
                                 .name("Authorization")

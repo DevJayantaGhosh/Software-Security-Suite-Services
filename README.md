@@ -12,9 +12,9 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                        SHERLOCK SECURITY SUITE                           │
-│                 (Electron Desktop App  &  Web Portal)                    │
-│                          Frontend — Port 5173                            │
+│                        SHERLOCK SECURITY SUITE                          │
+│                 (Electron Desktop App  &  Web Portal)                   │
+│                          Frontend — Port 5173                           │
 └───────────┬─────────────────────────────────────────────┬───────────────┘
             │                                             │
             │  User Authentication                        │  Product, Repo &

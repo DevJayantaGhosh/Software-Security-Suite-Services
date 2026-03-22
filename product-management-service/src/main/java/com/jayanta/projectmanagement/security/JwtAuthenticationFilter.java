@@ -31,11 +31,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
         String requestPath = request.getRequestURI();
 
-        log.debug(" Processing request: {} {}", request.getMethod(), requestPath);
+        log.debug("Processing request: {} {}", request.getMethod(), requestPath);
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String jwt = authHeader.substring(7);
-            log.debug(" Bearer token found (length: {})", jwt.length());
+            log.debug("Bearer token found (length: {})", jwt.length());
 
             String username = jwtService.extractUsername(jwt);
 
@@ -54,10 +54,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 
             } else {
-                log.warn("❌ Authentication FAILED for username: {}", username);
+                log.warn("Authentication FAILED for username: {}", username);
             }
         } else {
-            log.debug(" No Bearer token in request");
+            log.debug("No Bearer token in request");
         }
 
         filterChain.doFilter(request, response);

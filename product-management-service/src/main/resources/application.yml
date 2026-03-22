@@ -5,6 +5,8 @@ server:
     include-binding-errors: always
 
 spring:
+  config:
+    import: optional:file:.env[.properties]
   application:
     name: product-management-service
   data:
@@ -51,9 +53,8 @@ mongodb:
   authentication-database: ${MONGODB_AUTH_DB:admin}
 
 jwt:
-  # Note: SAME SECRET AS USER MANAGEMENT SERVICE (shared)
-  secret: ${JWT_SECRET}
-  expiration: ${JWT_EXPIRATION}
+  # RS256 asymmetric — only the public key is needed to verify tokens signed by user-management-service
+  public-key-path: classpath:keys/public.pem
 
 app:
   cors:

@@ -19,11 +19,6 @@ public class OpenApiConfig {
                         .title("👤 User Management Service 👤")
                         .description("""
 
-    ## 🔐 User Management With Self-Service Registration & Login
-
-    
-    
-
      **Jayanta Ghosh - cs23m513@smail.iitm.ac.in**
     """)
 

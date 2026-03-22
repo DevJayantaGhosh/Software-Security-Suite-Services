@@ -8,57 +8,59 @@
 
 ## High-Level Architecture
 
-**Spring Boot 3.3.4 | Java 21 | MongoDB | JWT Authentication**
+**Spring Boot 3.3.4 | Java 21 | MongoDB | RS256 Asymmetric JWT (RSA-4096 Public Key Verification)**
 
 ```
-┌──────────────────────────────────────────────────────────────────────────────┐
-│                       PRODUCT MANAGEMENT SERVICE                             │
-│                              (Port 9090)                                     │
-├──────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│  ┌─────────────┐    ┌──────────────┐    ┌──────────────────────────────────┐ │
-│  │   Clients   │───>│   Security   │───>│         REST Controllers         │ │
-│  │  (Desktop   │    │    Filter    │    │                                  │ │
-│  │   & Web     │    │    Chain     │    │  • ProductController             │ │
-│  │   Portal)   │    │              │    │  • RepoController                │ │
-│  └─────────────┘    │  ┌────────┐  │    │  • DependencyController          │ │
-│                     │  │  JWT   │  │    │                                  │ │
-│                     │  │ Filter │  │    │                                  │ │
-│                     │  └────────┘  │    │                                  │ │
-│                     └──────────────┘    └───────────────┬──────────────────┘ │
-│                                                          │                   │
-│                            ┌─────────────────────────────┤                   │
-│                            │                             │                   │
-│                  ┌─────────▼──────────┐     ┌─────────────▼────────────────┐ │
-│                  │   Service Layer     │    │      Security Layer          │ │
-│                  │                     │    │                              │ │
-│                  │  • ProductService   │    │  • JwtService                │ │
-│                  │  • RepoService      │    │  • JwtAuthenticationFilter   │ │
-│                  │  • DependencyService│    │  • SecurityConfig            │ │
-│                  │                     │    │                              │ │
-│                  └─────────┬──────────┘    └──────────────────────────────┘  │
-│                            │                                                 │
-│                  ┌─────────▼──────────┐                                      │
-│                  │  Repository Layer   │                                     │
-│                  │ (Spring Data Mongo) │                                     │
-│                  │                     │                                     │
-│                  │  • ProductRepository│                                     │
-│                  │  • RepoRepository   │                                     │
-│                  │  • DependencyRepo   │                                     │
-│                  └─────────┬──────────┘                                      │
-│                            │                                                 │
-├────────────────────────────┼─────────────────────────────────────────────────┤
-│                            │                                                 │
-│                  ┌─────────▼──────────┐                                      │
-│                  │      MongoDB        │                                     │
-│                  │                     │                                     │
-│                  │  Collections:       │                                     │
-│                  │   - products        │                                     │
-│                  │   - repos           │                                     │
-│                  │   - dependencies    │                                     │
-│                  └─────────────────────┘                                     │
-│                                                                              │
-└──────────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────┐
+│                     PRODUCT MANAGEMENT SERVICE                         │
+│                            (Port 9090)                                 │
+├────────────────────────────────────────────────────────────────────────┤
+│                                                                        │
+│ ┌─────────────┐  ┌──────────────┐  ┌──────────────────────────────┐    │
+│ │   Clients   │─>│   Security   │─>│      REST Controllers        │    │
+│ │  (Desktop   │  │    Filter    │  │                              │    │
+│ │   & Web     │  │    Chain     │  │  • ProductController         │    │
+│ │   Portal)   │  │              │  │  • RepoController            │    │
+│ └─────────────┘  │  ┌────────┐  │  │  • DependencyController      │    │
+│                  │  │  JWT   │  │  │                              │    │
+│                  │  │ Filter │  │  │                              │    │
+│                  │  └────────┘  │  │                              │    │
+│                  └──────────────┘  └──────────────┬───────────────┘    │
+│                                                   │                    │
+│                       ┌───────────────────────────┤                    │
+│                       │                           │                    │
+│             ┌─────────▼────────┐   ┌───────────────▼──────────────┐    │
+│             │  Service Layer    │  │     Security Layer           │    │
+│             │                   │  │                              │    │
+│             │ • ProductService  │  │  • JwtService                │    │
+│             │ • RepoService     │  │  • JwtAuthenticationFilter   │    │
+│             │ • DependencyServ. │  │  • SecurityConfig            │    │
+│             │                   │  │                              │    │
+│             └─────────┬────────┘   └──────────────────────────────┘    │
+│                       │                                                │
+│             ┌─────────▼────────┐   ┌──────────────────────────────┐    │
+│             │ Repository Layer  │  │  RSA Key (resources)         │    │
+│             │(Spring Data Mongo)|  │                              │    │
+│             │                   │  │  public.pem ONLY             │    │
+│             │ • ProductRepo     │  │                              │    │
+│             │ • RepoRepository  │  │  No private key              │    │
+│             │ • DependencyRepo  │  │  Cannot forge tokens         │    │
+│             └─────────┬────────┘   │                              │    │
+│                       │            │  Stored in:                  │    │
+│                       │            │  src/main/resources/keys/    │    │
+│                       │            └──────────────────────────────┘    │
+├───────────────────────┼────────────────────────────────────────────────┤
+│                       │                                                │
+│             ┌─────────▼────────┐                                       │
+│             │     MongoDB      │                                       │
+│             │                  │                                       │
+│             │ Collections:     │                                       │
+│             │  - products      │                                       │
+│             │  - repos         │                                       │
+│             │  - dependencies  │                                       │
+│             └──────────────────┘                                       │
+│                                                                        │
+└────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -75,7 +77,7 @@ Client Request (Desktop App / Web Portal)
          │
          ▼
 ┌──────────────────┐
-│  JWT Auth Filter │  (Validates shared JWT secret with User Service)
+│  JWT Auth Filter │  (Validates JWT using RSA public key — RS256 signature + expiration + license)
 └────────┬─────────┘
          │
          ▼
@@ -94,20 +96,54 @@ Client Request (Desktop App / Web Portal)
 
 ---
 
+## JWT Authentication — Token Validator 🔓
+
+This service is the **JWT validator**. It holds only the **RSA-4096 public key** and can verify tokens but **cannot sign or forge them**.
+
+### Token Validation
+
+`JwtService.isTokenValid()` checks:
+- ✅ RSA signature verification (RS256 with public key)
+- ✅ Token not expired (1 hour lifetime)
+- ✅ License not expired (from `licenseExpiredOn` JWT claim — **no DB call, no inter-service call**)
+
+### License Validation from Token Claims
+
+The JWT token issued by the User Management Service contains a `licenseExpiredOn` claim. This service reads it directly from the token:
+
+```java
+// No database call needed — license info is embedded in the JWT
+String licenseExp = claims.get("licenseExpiredOn", String.class);
+boolean isInternal = claims.get("isInternal", Boolean.class);
+// Internal users and Admins bypass license check
+// External users: licenseExpiredOn must be in the future
+```
+
+### RSA Key Storage
+
+```
+src/main/resources/keys/
+  └── public.pem       ← 🔓 RSA public key ONLY (copied from user-management-service)
+```
+
+> ⚠️ **Security:** This service has NO private key. Even if this service is compromised, attackers cannot forge JWT tokens.
+
+---
+
 ## Tech Stack
 
-| Layer              | Technology                          |
-|--------------------|-------------------------------------|
-| Framework          | Spring Boot 3.3.4                   |
-| Language           | Java 21                             |
-| Database           | MongoDB (Cloud URI or Standalone)   |
-| ODM                | Spring Data MongoDB                 |
-| Authentication     | JWT (JJWT 0.12.6) — shared secret  |
-| Authorization      | Spring Security + @PreAuthorize     |
-| Mapping            | ModelMapper 3.2.0                   |
-| API Docs           | SpringDoc OpenAPI 2.6 (Swagger UI)  |
-| Validation         | Jakarta Bean Validation             |
-| Build              | Maven                               |
+| Layer              | Technology                                               |
+|--------------------|----------------------------------------------------------|
+| Framework          | Spring Boot 3.3.4                                        |
+| Language           | Java 21                                                  |
+| Database           | MongoDB (Cloud URI or Standalone)                        |
+| ODM                | Spring Data MongoDB                                      |
+| Authentication     | JWT RS256 (JJWT 0.12.6) — RSA-4096 public key verify     |
+| Authorization      | Spring Security + @PreAuthorize                          |
+| Mapping            | ModelMapper 3.2.0                                        |
+| API Docs           | SpringDoc OpenAPI 2.6 (Swagger UI)                       |
+| Validation         | Jakarta Bean Validation                                  |
+| Build              | Maven                                                    |
 
 ---
 
@@ -175,11 +211,30 @@ MONGODB_DATABASE=product_management_db
 MONGODB_USERNAME=
 MONGODB_PASSWORD=
 MONGODB_AUTH_DB=admin
-
-# JWT (must match User Management Service)
-JWT_SECRET=
-JWT_EXPIRATION=86400000
 ```
+
+> **Note:** No `JWT_SECRET` or `JWT_PRIVATE_KEY_PASSPHRASE` is needed. This service uses only the public key from `src/main/resources/keys/public.pem` to verify tokens.
+
+---
+
+## RSA Public Key Setup
+
+This service requires the RSA public key generated by the **Software-Crypto-Shield** KeyGenerator tool.
+
+> 🔗 **Tool:** [Software-Crypto-Shield](https://github.com/DevJayantaGhosh/Software-Crypto-Shield) — KeyGenerator
+
+The key pair is generated in the user-management-service using:
+```bash
+KeyGenerator.exe generate rsa -s 4096 -o ./mykeys -p MyPassword
+```
+
+Then copy the public key to this service:
+```bash
+mkdir -p src/main/resources/keys
+cp ../user-management-service/src/main/resources/keys/public.pem src/main/resources/keys/
+```
+
+> ⚠️ **Security:** Only `public.pem` should be placed here. The encrypted private key must NEVER be copied to this service.
 
 ---
 
@@ -188,9 +243,11 @@ JWT_EXPIRATION=86400000
 ```bash
 # Prerequisites: Java 21, Maven, MongoDB
 
-# 1. Set environment variables (or create .env file)
+# 1. Ensure public.pem is in src/main/resources/keys/ (see above)
 
-# 2. Build and run
+# 2. Set environment variables (or create .env file)
+
+# 3. Local build and run
 ./mvnw spring-boot:run
 
 # Service starts on http://localhost:9090

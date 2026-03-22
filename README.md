@@ -113,11 +113,11 @@ The services use **RS256 asymmetric JWT authentication**. The User Management Se
 | Claim              | Description                                                   |
 |--------------------|---------------------------------------------------------------|
 | `sub`              | User email (subject)                                          |
-| `roles`            | User roles (`ROLE_Admin`, `ROLE_Internal`, `ROLE_External`)   |
+| `roles`            | User roles                                                    |                                             
 | `isInternal`       | Whether user is internal (bypasses license check)             |
 | `licenseExpiredOn` | License expiration timestamp (null for Admin/Internal users)  |
 | `iat`              | Issued at timestamp                                           |
-| `exp`              | Expiration timestamp (1 hour from issuance)                   |
+| `exp`              | Expiration timestamp                                          |
 
 ### Validation Flow
 

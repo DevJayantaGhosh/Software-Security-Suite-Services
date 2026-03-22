@@ -7,7 +7,7 @@ import com.jayanta.usermanagement.exception.UserException;
 import com.jayanta.usermanagement.model.AppUser;
 import com.jayanta.usermanagement.model.Role;
 import com.jayanta.usermanagement.repository.RoleRepository;
-import com.jayanta.usermanagement.repository.UserRepository;
+import com.jayanta.usermanagement.repository.AppUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,47 +25,47 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
-public class UserService {
+public class AppUserService {
 
-    private final UserRepository userRepository;
+    private final AppUserRepository appUserRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
     public AppUser register(RegisterRequest request) {
         log.info("Registering new user: {}", request.getEmail());
-        if (userRepository.existsByEmail(request.getEmail())) {
+        if (appUserRepository.existsByEmail(request.getEmail())) {
             throw new UserException("Email already exists", "EMAIL_EXISTS", "email");
         }
         Role userRole = roleRepository.findByName(UserRole.User)
                 .orElseThrow(() -> new UserException("User role not found", "ROLE_NOT_FOUND"));
         AppUser user = new AppUser();
-        user.setId(UUID.randomUUID().toString());
+
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(userRole);
         user.setCreatedAt(LocalDateTime.now());
-        AppUser savedUser = userRepository.save(user);
+        AppUser savedUser = appUserRepository.save(user);
         log.info("User registered successfully: {}", savedUser.getId());
         return savedUser;
     }
 
     public AppUser findByEmail(String email) {
-        return userRepository.findByEmail(email)
+        return appUserRepository.findByEmail(email)
                 .orElseThrow(() -> new UserException("User not found", "USER_NOT_FOUND"));
     }
 
     public List<AppUser> getAllUsers() {
-        return userRepository.findAll();
+        return appUserRepository.findAll();
     }
 
     public List<AppUser> getInternalUsers() {
-        return userRepository.findAllInternalUsers();
+        return appUserRepository.findAllInternalUsers();
     }
 
     public AppUser updateUser(String userId, UpdateUserRequest request) {
         try {
-            AppUser user = userRepository.findById(userId)
+            AppUser user = appUserRepository.findById(userId)
                     .orElseThrow(() -> new UserException("User not found: " + userId, "USER_NOT_FOUND"));
 
             Role userRole = roleRepository.findByName(UserRole.valueOf(request.getRole()))
@@ -110,7 +110,7 @@ public class UserService {
                 }
             }
 
-            AppUser savedUser = userRepository.save(user);
+            AppUser savedUser = appUserRepository.save(user);
             log.info("User fully updated by {}: {}", user.getModifiedBy(), savedUser.getId());
             return savedUser;
         } catch (UserException e) {
@@ -124,9 +124,9 @@ public class UserService {
     }
 
     public void deleteUser(String userId) {
-        AppUser user = userRepository.findById(userId)
+        AppUser user = appUserRepository.findById(userId)
                 .orElseThrow(() -> new UserException("User not found", "USER_NOT_FOUND", userId));
-        userRepository.delete(user);
+        appUserRepository.delete(user);
         log.info("User deleted: {}", userId);
     }
 
@@ -141,7 +141,7 @@ public class UserService {
         AppUser user = findByEmail(email);
         user.setPassword(passwordEncoder.encode(newPassword));
         user.setLastModifiedAt(LocalDateTime.now());
-        userRepository.save(user);
+        appUserRepository.save(user);
         log.info("Password reset successful for user: {}", user.getId());
     }
 }

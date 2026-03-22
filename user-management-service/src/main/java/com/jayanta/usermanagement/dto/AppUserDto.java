@@ -10,13 +10,13 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class AppUserDto {
-    private String id;
+    private Long id;
     private String name;
     private String email;
     private UserRole role;
     private String licenseActivatedBy;
 
-    // ✅ DATE ONLY - yyyy-MM-dd format
+    //  DATE ONLY - yyyy-MM-dd format
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime licenseActivatedOn;
 

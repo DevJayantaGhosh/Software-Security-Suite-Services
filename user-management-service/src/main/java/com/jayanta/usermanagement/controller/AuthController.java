@@ -4,7 +4,7 @@ import com.jayanta.usermanagement.dto.*;
 import com.jayanta.usermanagement.model.AppUser;
 import com.jayanta.usermanagement.security.JwtService;
 import com.jayanta.usermanagement.service.OtpService;
-import com.jayanta.usermanagement.service.UserService;
+import com.jayanta.usermanagement.service.AppUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -27,7 +27,7 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-    private final UserService userService;
+    private final AppUserService userService;
     private final OtpService otpService;
 
     @Operation(summary = "Register new user")

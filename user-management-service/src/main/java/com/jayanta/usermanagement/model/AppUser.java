@@ -18,25 +18,25 @@ import java.util.List;
 @Data @NoArgsConstructor
 public class AppUser implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(length = 36)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(length = 64)
+    private Long  id;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 128)
     private String name;
 
     @Column(nullable = false, length = 255, unique = true)
     private String email;
 
     @JsonIgnore
-    @Column(nullable = false, length = 500)
+    @Column(nullable = false, length = 512)
     private String password;
 
     @JoinColumn(name = "role_id", nullable = false)
     @ManyToOne(fetch = FetchType.EAGER)
     private Role role;
 
-    @Column(length = 36)
+    @Column(length = 128)
     private String licenseActivatedBy;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
@@ -54,7 +54,7 @@ public class AppUser implements UserDetails {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime lastModifiedAt;
 
-    @Column(length = 36)
+    @Column(length = 128)
     private String modifiedBy;
 
     @Override

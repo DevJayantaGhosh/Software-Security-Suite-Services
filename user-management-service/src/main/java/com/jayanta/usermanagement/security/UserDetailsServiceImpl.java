@@ -1,7 +1,7 @@
 package com.jayanta.usermanagement.security;
 
 import com.jayanta.usermanagement.model.AppUser;
-import com.jayanta.usermanagement.repository.UserRepository;
+import com.jayanta.usermanagement.repository.AppUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,15 +12,15 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CustomUserDetailsService implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final AppUserRepository appUserRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         log.debug("Loading user details for email: {}", email);
 
-        AppUser user = userRepository.findByEmail(email)
+        AppUser user = appUserRepository.findByEmail(email)
                 .orElseThrow(() -> {
                     log.warn("User not found with email: {}", email);
                     return new UsernameNotFoundException("User not found: " + email);

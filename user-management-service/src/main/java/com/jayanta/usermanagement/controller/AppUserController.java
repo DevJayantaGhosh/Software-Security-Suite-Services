@@ -2,7 +2,7 @@ package com.jayanta.usermanagement.controller;
 
 import com.jayanta.usermanagement.dto.AppUserDto;
 import com.jayanta.usermanagement.dto.UpdateUserRequest;
-import com.jayanta.usermanagement.service.UserService;
+import com.jayanta.usermanagement.service.AppUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,16 +20,16 @@ import java.util.stream.Collectors;
 @Tag(name = "User Management")
 @SecurityRequirement(name = "bearerAuth")
 @RequiredArgsConstructor
-public class UserController {
+public class AppUserController {
 
-    private final UserService userService;
+    private final AppUserService appUserService;
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Get all users (Any authenticated user)")
     public ResponseEntity<List<AppUserDto>> getUsers() {
         return ResponseEntity.ok(
-                userService.getAllUsers().stream().map(AppUserDto::from).collect(Collectors.toList())
+                appUserService.getAllUsers().stream().map(AppUserDto::from).collect(Collectors.toList())
         );
     }
 
@@ -38,7 +38,7 @@ public class UserController {
     @Operation(summary = "Get internal users (Any authenticated user)")
     public ResponseEntity<List<AppUserDto>> getInternalUsers() {
         return ResponseEntity.ok(
-                userService.getInternalUsers().stream().map(AppUserDto::from).collect(Collectors.toList())
+                appUserService.getInternalUsers().stream().map(AppUserDto::from).collect(Collectors.toList())
         );
     }
 
@@ -48,7 +48,7 @@ public class UserController {
     public ResponseEntity<AppUserDto> updateUser(
             @PathVariable String userId,
             @Valid @RequestBody UpdateUserRequest request) {
-        AppUserDto updatedUser = AppUserDto.from(userService.updateUser(userId, request));
+        AppUserDto updatedUser = AppUserDto.from(appUserService.updateUser(userId, request));
         return ResponseEntity.ok(updatedUser);
     }
 
@@ -56,7 +56,7 @@ public class UserController {
     @PreAuthorize("hasRole('Admin')")
     @Operation(summary = "Delete single user (Admin only)")
     public ResponseEntity<Void> deleteUser(@PathVariable String userId) {
-        userService.deleteUser(userId);
+        appUserService.deleteUser(userId);
         return ResponseEntity.noContent().build();
     }
 
@@ -64,7 +64,7 @@ public class UserController {
     @PreAuthorize("hasRole('Admin')")
     @Operation(summary = "Delete multiple users (Admin only)")
     public ResponseEntity<Void> deleteUsers(@RequestBody List<String> userIds) {
-        userService.deleteUsers(userIds);
+        appUserService.deleteUsers(userIds);
         return ResponseEntity.noContent().build();
     }
 }

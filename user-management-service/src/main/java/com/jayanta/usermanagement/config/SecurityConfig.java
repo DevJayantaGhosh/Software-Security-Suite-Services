@@ -1,10 +1,7 @@
 package com.jayanta.usermanagement.config;
 
-import com.jayanta.usermanagement.security.CustomUserDetailsService;
+import com.jayanta.usermanagement.security.UserDetailsServiceImpl;
 import com.jayanta.usermanagement.security.JwtAuthenticationFilter;
-import io.swagger.v3.oas.models.Components;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +30,7 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
-    private final CustomUserDetailsService userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {

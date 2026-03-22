@@ -4,7 +4,7 @@
 
 -- ─────────────────────────────────────────────────────
 -- STEP 1: CREATE ROLES
--- Safe idempotent insert (runs every restart → skips if exists)
+-- Safe idempotent insert (runs every restart -> skips if exists)
 -- ─────────────────────────────────────────────────────
 INSERT INTO roles (name) VALUES
     ('Admin'),

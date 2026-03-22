@@ -144,8 +144,6 @@ This generates:
 - `encrypted-private.pem` — RSA-4096 private key encrypted with **PBES2 + AES-256-CBC** (password-protected)
 - `public.pem` — RSA-4096 public key in PKCS#1 PEM format
 
-> ⚠️ **Note:** Do NOT use OpenSSL to generate keys. The Java services use BouncyCastle to decrypt the private key, and the KeyGenerator tool produces keys in the exact PBES2/AES-256-CBC format that BouncyCastle expects. OpenSSL may generate legacy encryption schemes (PBES1/DES3) which are incompatible.
-
 Place the keys in `src/main/resources/keys/`:
 
 ```

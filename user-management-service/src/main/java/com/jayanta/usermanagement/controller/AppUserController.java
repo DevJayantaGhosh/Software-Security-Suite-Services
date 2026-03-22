@@ -46,7 +46,7 @@ public class AppUserController {
     @PreAuthorize("hasRole('Admin')")
     @Operation(summary = "Update user (Admin only) - ALL fields except ID")
     public ResponseEntity<AppUserDto> updateUser(
-            @PathVariable String userId,
+            @PathVariable Long userId,
             @Valid @RequestBody UpdateUserRequest request) {
         AppUserDto updatedUser = AppUserDto.from(appUserService.updateUser(userId, request));
         return ResponseEntity.ok(updatedUser);
@@ -55,7 +55,7 @@ public class AppUserController {
     @DeleteMapping("/{userId}")
     @PreAuthorize("hasRole('Admin')")
     @Operation(summary = "Delete single user (Admin only)")
-    public ResponseEntity<Void> deleteUser(@PathVariable String userId) {
+    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
         appUserService.deleteUser(userId);
         return ResponseEntity.noContent().build();
     }
@@ -63,7 +63,7 @@ public class AppUserController {
     @DeleteMapping("/bulk")
     @PreAuthorize("hasRole('Admin')")
     @Operation(summary = "Delete multiple users (Admin only)")
-    public ResponseEntity<Void> deleteUsers(@RequestBody List<String> userIds) {
+    public ResponseEntity<Void> deleteUsers(@RequestBody List<Long> userIds) {
         appUserService.deleteUsers(userIds);
         return ResponseEntity.noContent().build();
     }

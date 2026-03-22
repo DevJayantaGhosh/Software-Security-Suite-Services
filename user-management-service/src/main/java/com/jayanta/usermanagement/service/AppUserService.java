@@ -63,7 +63,7 @@ public class AppUserService {
         return appUserRepository.findAllInternalUsers();
     }
 
-    public AppUser updateUser(String userId, UpdateUserRequest request) {
+    public AppUser updateUser(Long userId, UpdateUserRequest request) {
         try {
             AppUser user = appUserRepository.findById(userId)
                     .orElseThrow(() -> new UserException("User not found: " + userId, "USER_NOT_FOUND"));
@@ -123,14 +123,14 @@ public class AppUserService {
         }
     }
 
-    public void deleteUser(String userId) {
+    public void deleteUser(Long userId) {
         AppUser user = appUserRepository.findById(userId)
-                .orElseThrow(() -> new UserException("User not found", "USER_NOT_FOUND", userId));
+                .orElseThrow(() -> new UserException("User not found with UserId : "+userId, "USER_NOT_FOUND"));
         appUserRepository.delete(user);
         log.info("User deleted: {}", userId);
     }
 
-    public void deleteUsers(List<String> userIds) {
+    public void deleteUsers(List<Long> userIds) {
         log.info("Admin bulk deleting {} users", userIds.size());
         userIds.forEach(this::deleteUser);
         log.info("Bulk delete completed");

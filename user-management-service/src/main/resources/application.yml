@@ -1,5 +1,5 @@
 server:
-  port: 8080  #  USER SERVICE PORT
+  port: 8181  #  USER SERVICE PORT
   error:
     include-message: always
     include-binding-errors: always

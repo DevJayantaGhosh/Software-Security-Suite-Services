@@ -13,7 +13,7 @@
 ```
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │                          USER MANAGEMENT SERVICE                             │
-│                              (Port 8080)                                     │
+│                              (Port 8181)                                     │
 ├──────────────────────────────────────────────────────────────────────────────┤
 │                                                                              │
 │  ┌─────────────┐    ┌──────────────┐    ┌──────────────────────────────────┐ │
@@ -241,5 +241,5 @@ psql -U postgres -c "CREATE DATABASE USER_MANAGEMENT_DB;"
 # 4. Build and run
 ./mvnw spring-boot:run
 
-# Service starts on http://localhost:8080
-# Swagger UI: http://localhost:8080/swagger-ui/index.html
+# Service starts on http://localhost:8181
+# Swagger UI: http://localhost:8181/swagger-ui/index.html

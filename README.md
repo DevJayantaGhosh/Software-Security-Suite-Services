@@ -25,7 +25,7 @@
 ┌───────────────────────────────┐       ┌───────────────────────────────────┐
 │                               │       │                                   │
 │  USER MANAGEMENT SERVICE      │       │  PRODUCT MANAGEMENT SERVICE       │
-│  Port 8080                    │       │  Port 9090                        │
+│  Port 8181                    │       │  Port 9090                        │
 │                               │       │                                   │
 │  • AuthController             │       │  • ProductController              │
 │  • UserController             │       │  • RepoController                 │
@@ -45,7 +45,7 @@
 
 | Service                    | Port   | Database         | Purpose                                            |
 |----------------------------|--------|------------------|----------------------------------------------------|
-| **User Management**        | `8080` | PostgreSQL       | Auth, registration, roles, license, OTP, email     |
+| **User Management**        | `8181` | PostgreSQL       | Auth, registration, roles, license, OTP, email     |
 | **Product Management**     | `9090` | MongoDB          | Products, repos, dependencies, scan results        |
 
 ---
@@ -68,7 +68,7 @@ The services use **RS256 asymmetric JWT authentication**. The User Management Se
 ┌──────────────────▼────────────────────┐  ┌────────────▼───────────────────────┐
 │                                       │  │                                    │
 │    USER MANAGEMENT SERVICE            │  │    PRODUCT MANAGEMENT SERVICE      │
-│           (Port 8080)                 │  │           (Port 9090)              │
+│           (Port 8181)                 │  │           (Port 9090)              │
 │                                       │  │                                    │
 │  1. Client sends credentials          │  │  1. Client sends JWT in header     │
 │     POST /api/auth/login              │  │     Authorization: Bearer <token>  │
@@ -176,12 +176,12 @@ product-management-service/src/main/resources/keys/
 
 # 4. Start User Management Service
 cd user-management-service
-./mvnw spring-boot:run          # → http://localhost:8080
+./mvnw spring-boot:run          # → http://localhost:8181
 
 # 5. Start Product Management Service
 cd product-management-service
 ./mvnw spring-boot:run          # → http://localhost:9090
 
 # Swagger UI:
-#   User Service:    http://localhost:8080/swagger-ui/index.html
+#   User Service:    http://localhost:8181/swagger-ui/index.html
 #   Product Service: http://localhost:9090/swagger-ui/index.html

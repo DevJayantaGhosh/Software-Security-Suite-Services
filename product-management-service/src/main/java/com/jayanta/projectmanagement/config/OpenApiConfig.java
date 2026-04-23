@@ -20,7 +20,7 @@ public class OpenApiConfig {
                         .description("""
 
     ## 🔐 JWT Authentication (User Management Service)
-    • **🔑 Get JWT** - Login via User Management Service (`http://localhost:8080/api/auth/login`)
+    • **🔑 Get JWT** - Login via User Management Service (`http://localhost:8181/api/auth/login`)
     • **📋 Copy JWT** → Paste in [Authorize] → `Bearer {token}`
     
    

@@ -8,4 +8,5 @@ public class BaseScanResult {
     private ScanStatus status;
     private String timestamp;
     private List<String> logs;
+    private String logsCID;
 }

@@ -27,8 +27,8 @@
 │                     │  └────────┘  │    │                                  │ │
 │                     └──────────────┘    └───────────────┬──────────────────┘ │
 │                                                         │                    │
-│                            ┌─────────────────────────────┤                   │
-│                            │                             │                   │
+│                            ┌────────────────────────────┤                    │
+│                            │                            │                    │
 │                  ┌─────────▼──────────┐     ┌─────────────▼────────────────┐ │
 │                  │   Service Layer     │    │      Security Layer          │ │
 │                  │                     │    │                              │ │
@@ -39,23 +39,23 @@
 │                  └─────────┬──────────┘     └──────────────────────────────┘ │
 │                            │                                                 │
 │                  ┌─────────▼──────────┐     ┌──────────────────────────────┐ │
-│                  │  Repository Layer  │    │      External Services       │ │
-│                  │  (Spring Data JPA)  │    │                              │ │
-│                  │                     │    │  • Gmail SMTP                │ │
-│                  │  • UserRepository   │    │    (OTP Email Delivery)      │ │
-│                  │  • RoleRepository   │    │                              │ │
-│                  │  • OtpRepository    │    └──────────────────────────────┘ │
-│                   └─────────┬──────────┘                                     │
+│                  │  Repository Layer  │     │      External Services       │ │
+│                  │  (Spring Data JPA) │     │                              │ │
+│                  │                    │     │  • Gmail SMTP                │ │
+│                  │  • UserRepository  │     │    (OTP Email Delivery)      │ │
+│                  │  • RoleRepository  │     │                              │ │
+│                  │  • OtpRepository   │     └──────────────────────────────┘ │
+│                  └─────────┬──────────┘                                      │
 │                            │                                                 │
 │                  ┌─────────▼──────────┐     ┌──────────────────────────────┐ │
-│                  │    PostgreSQL       │    │    RSA Keys (resources)      │ │
-│                  │  USER_MANAGEMENT_DB │    │                              │ │
-│                  │                     │    │  encrypted-private.pem       │ │
-│                  │  Tables:            │    │  public.pem                  │ │
-│                  │   - users           │    │                              │ │
-│                  │   - roles           │    │  Stored in:                  │ │
-│                  │   - otps            │    │  src/main/resources/keys/    │ │
-│                  └─────────────────────┘    └──────────────────────────────┘ │
+│                  │    PostgreSQL      │     │    RSA Keys (resources)      │ │
+│                  │ USER_MANAGEMENT_DB │     │                              │ │
+│                  │                    │     │  encrypted-private.pem       │ │
+│                  │  Tables:           │     │  public.pem                  │ │
+│                  │   - users          │     │                              │ │
+│                  │   - roles          │     │  Stored in:                  │ │
+│                  │   - otps           │     │  src/main/resources/keys/    │ │
+│                  └────────────────────┘     └──────────────────────────────┘ │
 │                                                                              │
 └──────────────────────────────────────────────────────────────────────────────┘
 ```
